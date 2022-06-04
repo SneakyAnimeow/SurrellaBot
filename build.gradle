@@ -1,0 +1,117 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'org.beryx.runtime' version '1.12.7'
+    id "io.freefair.lombok" version "6.4.3"
+    id 'nu.studer.jooq' version '7.1.1'
+}
+
+runtime {
+    options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
+    modules = ['java.naming', 'java.xml', 'jdk.unsupported', 'jdk.net', 'jdk.security.auth',
+               'java.base', 'java.desktop', 'java.logging', 'java.net.http', 'jdk.crypto.cryptoki']
+    jpackage{
+        if (System.getProperty("os.name").toLowerCase().contains("windows")) {
+            imageOptions = ["--win-console"]
+        }
+    }
+}
+
+mainClassName = 'club.anims.surrellabot.SurrellaBotLauncher'
+group 'club.anims'
+version '1.0'
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    implementation 'com.github.DV8FromtheWorld:JDA:v5.0.0-alpha.12'
+
+    implementation 'org.slf4j:slf4j-simple:2.0.0-alpha7'
+    implementation 'org.slf4j:slf4j-api:2.0.0-alpha7'
+
+    implementation 'org.xerial:sqlite-jdbc:3.36.0.3'
+
+    implementation 'com.zaxxer:HikariCP:5.0.1'
+
+    implementation 'org.jooq:jooq:3.16.6'
+    implementation 'org.jooq:jooq-codegen:3.16.6'
+    implementation 'org.jooq:jooq-meta:3.16.6'
+
+    jooqGenerator 'org.xerial:sqlite-jdbc:3.36.0.3'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+//
+//import org.jooq.meta.jaxb.Logging
+//
+//jooq {
+//    version = '3.16.4'  // default (can be omitted)
+//    edition = nu.studer.gradle.jooq.JooqEdition.OSS  // default (can be omitted)
+//
+//    configurations {
+//        main {  // name of the jOOQ configuration
+//            generateSchemaSourceOnCompilation = true  // default (can be omitted)
+//
+//            generationTool {
+//                logging = Logging.DEBUG
+//                jdbc {
+//                    driver = 'org.sqlite.JDBC'
+//                    url = 'jdbc:sqlite:surrellabot.db'
+//                }
+//                generator {
+//                    name = 'org.jooq.codegen.DefaultGenerator'
+//                    database {
+//                        name = 'org.jooq.meta.sqlite.SQLiteDatabase'
+//                        inputSchema = 'public'
+//                        forcedTypes {
+//                            forcedType {
+//                                name = 'varchar'
+//                                includeExpression = '.*'
+//                                includeTypes = 'JSONB?'
+//                            }
+//                            forcedType {
+//                                name = 'varchar'
+//                                includeExpression = '.*'
+//                                includeTypes = 'INET'
+//                            }
+//                        }
+//                    }
+//                    generate {
+//                        deprecated = false
+//                        records = true
+//                        immutablePojos = true
+//                        fluentSetters = true
+//                    }
+//                    target {
+//                        packageName = 'club.anims.surrellabot.database.model'
+//                        directory = 'src/main/java'  // default (can be omitted)
+//                    }
+//                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+//                }
+//            }
+//        }
+//    }
+//}
+
+task 'generate-model' {
+    group 'database-stuff'
+    description 'Generate model classes'
+
+    doFirst {
+        println "Generating model classes..."
+
+
+    }
+
+    doLast {
+        println "Classes generated."
+    }
+}
