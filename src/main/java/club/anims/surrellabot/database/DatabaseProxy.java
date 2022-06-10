@@ -55,7 +55,7 @@ public class DatabaseProxy {
 
         context.createTableIfNotExists("users")
                 .column("id", SQLDataType.INTEGER.identity(true))
-                .column("name", SQLDataType.VARCHAR(32).notNull())
+                .column("name", SQLDataType.NVARCHAR(32).notNull())
                 .column("discord_id", SQLDataType.VARCHAR(64).notNull())
                 .column("guild_id", SQLDataType.VARCHAR(64).notNull())
                 .column("has_admin_privileges", SQLDataType.BOOLEAN.notNull())
@@ -69,7 +69,7 @@ public class DatabaseProxy {
 
         context.createTableIfNotExists("guilds")
                 .column("id", SQLDataType.INTEGER.identity(true))
-                .column("name", SQLDataType.VARCHAR(64).notNull())
+                .column("name", SQLDataType.NVARCHAR(64).notNull())
                 .column("guild_id", SQLDataType.VARCHAR(64).notNull())
                 .column("prefix", SQLDataType.VARCHAR(32).notNull())
                 .column("log_channel_id", SQLDataType.VARCHAR(64).notNull())

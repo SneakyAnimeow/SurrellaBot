@@ -1,5 +1,7 @@
 package club.anims.surrellabot.commandsmanagement.commands;
 
+import club.anims.surrellabot.SurrellaBot;
+import club.anims.surrellabot.SurrellaEmbed;
 import club.anims.surrellabot.commandsmanagement.CommandContext;
 import club.anims.surrellabot.commandsmanagement.CommandPermission;
 import club.anims.surrellabot.commandsmanagement.ExecutableCommand;
@@ -16,6 +18,12 @@ public class Info extends ExecutableCommand {
 
     @Override
     public void execute() {
-        context.getMessage().reply("Hello world!").queue();
+        var embed = new SurrellaEmbed()
+                .setTitle("Surrella")
+                .addField("Version", String.format("`%s`", SurrellaBot.getVERSION()), true)
+                .addField("JRE", String.format("`%s`", System.getProperty("java.version")), true)
+                .addField("Platform", String.format("`%s`", System.getProperty("os.name")), true)
+                .build();
+        context.getMessage().replyEmbeds(embed).queue();
     }
 }

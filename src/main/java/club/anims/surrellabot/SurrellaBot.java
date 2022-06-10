@@ -1,9 +1,10 @@
 package club.anims.surrellabot;
 
-import club.anims.surrellabot.listeners.MainListenerAdapter;
+import club.anims.surrellabot.listeners.MessageListenerAdapter;
 import lombok.Getter;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.slf4j.Logger;
@@ -32,8 +33,9 @@ public class SurrellaBot {
                         CacheFlag.EMOTE,
                         CacheFlag.ONLINE_STATUS)
                 .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-                .addEventListeners(new MainListenerAdapter())
+                .addEventListeners(new MessageListenerAdapter())
                 .build();
+        jda.getPresence().setActivity(Activity.listening("!help"));
     }
 
     public static void start(String token) {
