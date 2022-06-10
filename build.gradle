@@ -6,20 +6,31 @@ plugins {
     id 'nu.studer.jooq' version '7.1.1'
 }
 
+
 runtime {
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']
     modules = ['java.naming', 'java.xml', 'jdk.unsupported', 'jdk.net', 'jdk.security.auth',
-               'java.base', 'java.desktop', 'java.logging', 'java.net.http', 'jdk.crypto.cryptoki']
+               'java.base', 'java.desktop', 'java.logging', 'java.net.http', 'jdk.crypto.cryptoki',
+               'java.sql', 'java.sql.rowset']
     jpackage{
         if (System.getProperty("os.name").toLowerCase().contains("windows")) {
             imageOptions = ["--win-console"]
         }
+        jvmArgs = ['-Dorg.jooq.no-tips=true']
     }
 }
 
 mainClassName = 'club.anims.surrellabot.SurrellaBotLauncher'
 group 'club.anims'
 version '1.0'
+
+def regenerateJooq = false // set to true to regenerate jooq model every time you run the build
+
+//check if file exists
+def jooqDirectory = new File('src/main/java/club/anims/surrellabot/database/model')
+if(!jooqDirectory.exists()) {
+    regenerateJooq = true
+}
 
 repositories {
     mavenCentral()
@@ -40,6 +51,8 @@ dependencies {
     implementation 'org.jooq:jooq-codegen:3.16.6'
     implementation 'org.jooq:jooq-meta:3.16.6'
 
+    implementation 'org.reflections:reflections:0.10.2'
+
     jooqGenerator 'org.xerial:sqlite-jdbc:3.36.0.3'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
@@ -49,69 +62,68 @@ dependencies {
 test {
     useJUnitPlatform()
 }
-//
-//import org.jooq.meta.jaxb.Logging
-//
-//jooq {
-//    version = '3.16.4'  // default (can be omitted)
-//    edition = nu.studer.gradle.jooq.JooqEdition.OSS  // default (can be omitted)
-//
-//    configurations {
-//        main {  // name of the jOOQ configuration
-//            generateSchemaSourceOnCompilation = true  // default (can be omitted)
-//
-//            generationTool {
-//                logging = Logging.DEBUG
-//                jdbc {
-//                    driver = 'org.sqlite.JDBC'
-//                    url = 'jdbc:sqlite:surrellabot.db'
-//                }
-//                generator {
-//                    name = 'org.jooq.codegen.DefaultGenerator'
-//                    database {
-//                        name = 'org.jooq.meta.sqlite.SQLiteDatabase'
+
+import org.jooq.meta.jaxb.Logging
+
+if(regenerateJooq){
+    jooq {
+        version = '3.16.4'  // default (can be omitted)
+        edition = nu.studer.gradle.jooq.JooqEdition.OSS  // default (can be omitted)
+
+        configurations {
+            main {  // name of the jOOQ configuration
+                generateSchemaSourceOnCompilation = true  // default (can be omitted)
+
+                generationTool {
+                    logging = Logging.INFO
+                    jdbc {
+                        driver = 'org.sqlite.JDBC'
+                        url = String.format('jdbc:sqlite:%s\\surrellabot.db', System.getProperty("user.dir"))
+                    }
+                    generator {
+                        name = 'org.jooq.codegen.DefaultGenerator'
+                        database {
+                            name = 'org.jooq.meta.sqlite.SQLiteDatabase'
 //                        inputSchema = 'public'
-//                        forcedTypes {
-//                            forcedType {
-//                                name = 'varchar'
-//                                includeExpression = '.*'
-//                                includeTypes = 'JSONB?'
-//                            }
-//                            forcedType {
-//                                name = 'varchar'
-//                                includeExpression = '.*'
-//                                includeTypes = 'INET'
-//                            }
-//                        }
-//                    }
-//                    generate {
-//                        deprecated = false
-//                        records = true
-//                        immutablePojos = true
-//                        fluentSetters = true
-//                    }
-//                    target {
-//                        packageName = 'club.anims.surrellabot.database.model'
-//                        directory = 'src/main/java'  // default (can be omitted)
-//                    }
-//                    strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
-//                }
-//            }
-//        }
-//    }
-//}
-
-task 'generate-model' {
-    group 'database-stuff'
-    description 'Generate model classes'
-
-    doFirst {
-        println "Generating model classes..."
-
-
+                            forcedTypes {
+                                forcedType {
+                                    name = 'varchar'
+                                    includeExpression = '.*'
+                                    includeTypes = 'JSONB?'
+                                }
+                                forcedType {
+                                    name = 'varchar'
+                                    includeExpression = '.*'
+                                    includeTypes = 'INET'
+                                }
+                            }
+                        }
+                        generate {
+                            deprecated = false
+                            records = true
+                            immutablePojos = true
+                            fluentSetters = true
+                        }
+                        target {
+                            packageName = 'club.anims.surrellabot.database.model'
+                            directory = 'build/generated-src/jooq/main'  // default (can be omitted)
+                        }
+                        strategy.name = 'org.jooq.codegen.DefaultGeneratorStrategy'
+                    }
+                }
+            }
+        }
     }
 
-    doLast {
-        println "Classes generated."
+    task copyModel(type: Copy){
+        from 'build/generated-src/jooq/main/club/anims/surrellabot/database/model'
+        into 'src/main/java/club/anims/surrellabot/database/model'
     }
+
+    task deleteCopiedModel(type: Delete){
+        delete 'build/generated-src/'
+    }
+
+    generateJooq.finalizedBy(copyModel)
+    copyModel.finalizedBy(deleteCopiedModel)
 }
