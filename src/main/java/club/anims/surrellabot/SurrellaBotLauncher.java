@@ -5,8 +5,10 @@ import club.anims.surrellabot.database.DatabaseProxy;
 import java.util.Scanner;
 
 public class SurrellaBotLauncher {
+    public static DatabaseProxy proxy;
+
     public static void main(String[] args){
-        var proxy = new DatabaseProxy();
+        proxy = new DatabaseProxy();
         proxy.createTables();
 
         if(!proxy.getSettingsQueries().settingExists("token")){

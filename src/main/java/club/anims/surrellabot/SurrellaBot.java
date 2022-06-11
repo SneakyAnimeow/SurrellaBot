@@ -35,7 +35,7 @@ public class SurrellaBot {
                 .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
                 .addEventListeners(new MessageListenerAdapter())
                 .build();
-        jda.getPresence().setActivity(Activity.listening("!help"));
+        jda.getPresence().setActivity(Activity.listening("/surrella"));
     }
 
     public static void start(String token) {

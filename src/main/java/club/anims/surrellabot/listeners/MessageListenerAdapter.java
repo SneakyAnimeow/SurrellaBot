@@ -5,7 +5,6 @@ import club.anims.surrellabot.commandsmanagement.CommandContext;
 import club.anims.surrellabot.commandsmanagement.CommandPermission;
 import club.anims.surrellabot.commandsmanagement.ExecutableCommand;
 import club.anims.surrellabot.commandsmanagement.SurrellaCommand;
-import club.anims.surrellabot.database.DatabaseProxy;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -15,6 +14,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
+import static club.anims.surrellabot.SurrellaBotLauncher.proxy;
+
 public class MessageListenerAdapter extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(MessageListenerAdapter.class);
 
@@ -23,10 +24,9 @@ public class MessageListenerAdapter extends ListenerAdapter {
         var guild = event.getGuild();
 
         // Check if the guild is registered in the database
-        var proxy = new DatabaseProxy();
         var guildRecord = proxy.getGuildsQueries().getGuild(guild.getId());
         if (guildRecord == null) {
-            proxy.getGuildsQueries().setGuild(0, guild.getName(), guild.getId(), "!", "", guild.getOwnerId(),false, guild.getSelfMember().getTimeJoined().toLocalDateTime());
+            proxy.getGuildsQueries().addGuild(guild.getName(), guild.getId(), "!", "", guild.getOwnerId(),false, guild.getSelfMember().getTimeJoined().toLocalDateTime());
             guildRecord = proxy.getGuildsQueries().getGuild(guild.getId());
         }
 

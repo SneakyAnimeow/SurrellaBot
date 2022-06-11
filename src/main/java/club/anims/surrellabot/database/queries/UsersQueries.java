@@ -15,9 +15,9 @@ public class UsersQueries {
         this.context = context;
     }
 
-    public void addUser(int id, String name, String discordId, String guildId, boolean hasAdminPrivileges, boolean hasModPrivileges, boolean isBlacklisted, String jailChannelId){
-        context.insertInto(Users.USERS, Users.USERS.ID, Users.USERS.NAME, Users.USERS.DISCORD_ID, Users.USERS.GUILD_ID, Users.USERS.HAS_ADMIN_PRIVILEGES, Users.USERS.HAS_MOD_PRIVILEGES, Users.USERS.IS_BLACKLISTED, Users.USERS.JAIL_CHANNEL_ID)
-                .values(id, name, discordId, guildId, hasAdminPrivileges, hasModPrivileges, isBlacklisted, jailChannelId)
+    public void addUser(String name, String discordId, String guildId, boolean hasAdminPrivileges, boolean hasModPrivileges, boolean isBlacklisted, String jailChannelId){
+        context.insertInto(Users.USERS, Users.USERS.NAME, Users.USERS.DISCORD_ID, Users.USERS.GUILD_ID, Users.USERS.HAS_ADMIN_PRIVILEGES, Users.USERS.HAS_MOD_PRIVILEGES, Users.USERS.IS_BLACKLISTED, Users.USERS.JAIL_CHANNEL_ID)
+                .values(name, discordId, guildId, hasAdminPrivileges, hasModPrivileges, isBlacklisted, jailChannelId)
                 .execute();
     }
 

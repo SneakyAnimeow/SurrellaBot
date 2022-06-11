@@ -18,9 +18,9 @@ public class GuildsQueries {
         this.context = context;
     }
 
-    public void addGuild(int id, String name, String guildId, String prefix, String logChannelId, String serverOwnerDiscordId, boolean isDisabled, LocalDateTime dateJoined){
-        context.insertInto(Guilds.GUILDS, Guilds.GUILDS.ID, Guilds.GUILDS.NAME, Guilds.GUILDS.GUILD_ID, Guilds.GUILDS.PREFIX, Guilds.GUILDS.LOG_CHANNEL_ID, Guilds.GUILDS.SERVER_OWNER_DISCORD_ID, Guilds.GUILDS.IS_DISABLED, Guilds.GUILDS.DATE_JOINED)
-                .values(id, name, guildId, prefix, logChannelId, serverOwnerDiscordId, isDisabled, dateJoined)
+    public void addGuild(String name, String guildId, String prefix, String logChannelId, String serverOwnerDiscordId, boolean isDisabled, LocalDateTime dateJoined){
+        context.insertInto(Guilds.GUILDS, Guilds.GUILDS.NAME, Guilds.GUILDS.GUILD_ID, Guilds.GUILDS.PREFIX, Guilds.GUILDS.LOG_CHANNEL_ID, Guilds.GUILDS.SERVER_OWNER_DISCORD_ID, Guilds.GUILDS.IS_DISABLED, Guilds.GUILDS.DATE_JOINED)
+                .values(name, guildId, prefix, logChannelId, serverOwnerDiscordId, isDisabled, dateJoined)
                 .execute();
     }
 

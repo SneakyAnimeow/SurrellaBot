@@ -5,7 +5,7 @@ import net.dv8tion.jda.api.entities.*;
 
 import java.util.List;
 
-@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
+@Getter @Builder @NoArgsConstructor @AllArgsConstructor
 public class CommandContext {
     private String command;
     private List<String> args;

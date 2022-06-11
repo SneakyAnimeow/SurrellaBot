@@ -1,6 +1,5 @@
 package club.anims.surrellabot.database;
 
-import club.anims.surrellabot.database.model.tables.Settings;
 import club.anims.surrellabot.database.queries.GuildsQueries;
 import club.anims.surrellabot.database.queries.SettingsQueries;
 import club.anims.surrellabot.database.queries.UsersQueries;
